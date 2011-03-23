@@ -1,0 +1,11 @@
+#!/usr/bin/perl
+
+# workaround for dzil
+package export_org_to_html;
+
+use 5.010;
+use strict;
+use warnings;
+
+use Sub::Spec::CmdLine qw(run);
+run(module => 'Org::Export::HTML', sub=>'export_org_to_html');
