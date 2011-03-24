@@ -340,6 +340,8 @@ better-off using Emacs' org-mode HTML export facility.
 
 This module uses L<Log::Any> logging framework.
 
+This module's functions have L<Sub::Spec> specs.
+
 
 =head1 FUNCTIONS
 
