@@ -12,13 +12,23 @@ use Test::More 0.96;
 require "testlib.pl";
 
 test_export_html(
-    name => 'export example.org',
+    name => 'example.org',
     args => {
         source_file=>"$Bin/data/example.org",
         html_title => 'Example',
     },
     status => 200,
     result => scalar read_file("$Bin/data/example.org.html"),
+);
+
+test_export_html(
+    name => 'example.org',
+    args => {
+        source_file=>"$Bin/data/naked.org",
+        naked=>1,
+    },
+    status => 200,
+    result => scalar read_file("$Bin/data/naked.org.html"),
 );
 
 done_testing();
