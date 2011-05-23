@@ -137,7 +137,11 @@ sub _export_elems {
         if ($elc eq 'Org::Element::Block') {
 
             # currently all assumed to be <PRE>
-            push @$html, "<PRE>", $el->raw_content, "</PRE>\n\n";
+            push @$html, (
+                "<PRE CLASS=\"block block_", lc($el->name), "\">",
+                $el->raw_content,
+                "</PRE>\n\n"
+            );
 
         } elsif ($elc eq 'Org::Element::Comment') {
 
