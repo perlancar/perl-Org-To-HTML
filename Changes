@@ -1,5 +1,24 @@
 Revision history for Org-Export-HTML
 
+0.02    2011-05-23
+
+        [ENHANCEMENTS]
+
+        - Parse Org::Element::ShortExample.
+
+        - Add CSS class to blocks.
+
+        - Add options: naked, css_url.
+
+        [BUG FIXES]
+
+        - Encode HTML entities.
+
+        [ETC]
+
+        - Add tests.
+
+
 0.01    2011-03-23
 
         - First release.
