@@ -16,6 +16,7 @@ test_export_html(
     args => {
         source_file=>"$Bin/data/example.org",
         html_title => 'Example',
+        css_url => 'style.css',
     },
     status => 200,
     result => scalar read_file("$Bin/data/example.org.html"),

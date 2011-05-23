@@ -62,6 +62,9 @@ _
         html_title => ['str' => {
             summary => 'HTML document title, defaults to source_file',
         }],
+        css_url => ['str' => {
+            summary => 'Add a link to CSS document',
+        }],
         naked => ['bool' => {
             summary => 'Don\'t wrap exported HTML with HTML/HEAD/BODY elements',
         }],
@@ -110,6 +113,12 @@ sub export_org_to_html {
         push @$html, "<HEAD>\n";
         my $title = $args{html_title} // $args{source_file} // "(no title)";
         push @$html, "<TITLE>", $title, "</TITLE>\n";
+        if ($args{css_url}) {
+            push @$html, (
+                "<LINK REL=\"stylesheet\" TYPE=\"text/css\" HREF=\"",
+                $args{css_url}, "\" />\n"
+            );
+        }
         push @$html, "</HEAD>\n\n";
 
         push @$html, "<BODY>\n";
