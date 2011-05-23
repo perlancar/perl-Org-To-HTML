@@ -354,14 +354,16 @@ __END__
 
  use Org::Export::HTML qw(export_org_to_html);
 
- export_org_to_html(
-     source_file  => 'todo.org', # or source_str
-     target_file  => 'todo.html',
-     html_title   => 'My Todo List',
-     include_tags => [...],
-     exclude_tags => [...],
+ my $res = export_org_to_html(
+     source_file   => 'todo.org', # or source_str
+     #target_file  => 'todo.html', # defaults return the HTML in $res->[2]
+     #html_title   => 'My Todo List', # defaults to file name
+     #include_tags => [...], # default exports all tags.
+     #exclude_tags => [...], # behavior mimics emacs's include/exclude rule
+     #css_url      => '/path/to/my/style.css', # default none
+     #naked        => 0, # if set to 1, no HTML/HEAD/BODY will be output.
  );
-
+ die "Failed" unless $res->[0] == 200;
 
 =head1 DESCRIPTION
 
