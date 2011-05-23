@@ -1,10 +1,10 @@
-* heading 1
+* heading 1 >
 ** heading 1.1
-An example:
+An example >:
  : a short example
 Another example:
  #+BEGIN_EXAMPLE
- a longer example
+ a longer example >
    second line
  third line
  #+END_EXAMPLE

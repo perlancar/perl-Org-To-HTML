@@ -11,6 +11,7 @@ use vars qw($VERSION);
 use File::Slurp;
 use List::Util;
 use Org::Document qw/first/;
+use HTML::Entities qw/encode_entities/;
 use String::Escape qw/elide printable/;
 
 require Exporter;
@@ -139,13 +140,23 @@ sub _export_elems {
             # currently all assumed to be <PRE>
             push @$html, (
                 "<PRE CLASS=\"block block_", lc($el->name), "\">",
-                $el->raw_content,
+                encode_entities($el->raw_content),
                 "</PRE>\n\n"
             );
 
+        } elsif ($elc eq 'Org::Element::ShortExample') {
+
+            push @$html, (
+                "<PRE CLASS=\"short_example\">",
+                encode_entities($el->example),
+                "</PRE>\n");
+
         } elsif ($elc eq 'Org::Element::Comment') {
 
-            push @$html, "<!-- ", $el->_str, " -->\n";
+            push @$html, (
+                "<!-- ",
+                encode_entities($el->_str),
+                " -->\n");
 
         } elsif ($elc eq 'Org::Element::Drawer') {
 
@@ -273,7 +284,7 @@ sub _export_elems {
             elsif ($style eq 'V') { $tag = 'TT' }
 
             push @$html, "<$tag>" if $tag;
-            my $text = $el->text;
+            my $text = encode_entities($el->text);
             $text =~ s/\R\R/\n\n<p>\n\n/g;
             push @$html, $text;
             _export_elems($html, $opts, @children);
