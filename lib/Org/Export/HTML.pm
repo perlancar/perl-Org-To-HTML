@@ -13,11 +13,54 @@ use Moo;
 use Org::Document qw/first/;
 use String::Escape qw/elide printable/;
 
+=head1 ATTRIBUTES
+
+=cut
+
+=head2 naked => BOOL
+
+If set to true, export_document() will not output HTML/HEAD/BODY wrapping
+element. Default is false.
+
+=cut
+
 has naked => (is => 'rw');
+
+=head2 include_tags => ARRAYREF
+
+Works like Org's 'org-export-select-tags' variable. See export_org_to_html() for
+more details.
+
+=cut
+
 has include_tags => (is => 'rw');
+
+=head2 exclude_tags => ARRAYREF
+
+After 'include_tags' is evaluated, all subtrees that are marked by any of the
+exclude tags will be removed from export.
+
+=cut
+
 has exclude_tags => (is => 'rw');
+
+=head2 html_title => STR
+
+Title to use in TITLE element. If unset, defaults to "(no title)" when
+exporting.
+
+=cut
+
 has html_title => (is => 'rw');
+
+=head2 css_url => STR
+
+If set, export_document() will output a LINK element pointing to this CSS.
+
+=cut
+
 has css_url => (is => 'rw');
+
 
 require Exporter;
 our @ISA       = qw(Exporter);
