@@ -1,5 +1,12 @@
 Revision history for Org-Export-HTML
 
+0.04    2011-06-16
+
+        No functional changes. Internal changes: split base class
+        (Org::Export::Base) and role (Org::Export::Role) to allow for other
+        exporter classes.
+
+
 0.03    2011-05-25
 
         [ENHANCEMENTS]
