@@ -8,10 +8,16 @@ use vars qw($VERSION);
 
 use File::Slurp;
 use HTML::Entities qw/encode_entities/;
-use List::Util;
+use Org::Document;
+
 use Moo;
-use Org::Document qw/first/;
-use String::Escape qw/elide printable/;
+with 'Org::Export::Role';
+extends 'Org::Export::Base';
+
+require Exporter;
+our @ISA;
+push @ISA,       qw(Exporter);
+our @EXPORT_OK = qw(export_org_to_html);
 
 =head1 ATTRIBUTES
 
@@ -25,24 +31,6 @@ element. Default is false.
 =cut
 
 has naked => (is => 'rw');
-
-=head2 include_tags => ARRAYREF
-
-Works like Org's 'org-export-select-tags' variable. See export_org_to_html() for
-more details.
-
-=cut
-
-has include_tags => (is => 'rw');
-
-=head2 exclude_tags => ARRAYREF
-
-After 'include_tags' is evaluated, all subtrees that are marked by any of the
-exclude tags will be removed from export.
-
-=cut
-
-has exclude_tags => (is => 'rw');
 
 =head2 html_title => STR
 
@@ -61,10 +49,6 @@ If set, export_document() will output a LINK element pointing to this CSS.
 
 has css_url => (is => 'rw');
 
-
-require Exporter;
-our @ISA       = qw(Exporter);
-our @EXPORT_OK = qw(export_org_to_html);
 
 our %SPEC;
 $SPEC{export_org_to_html} = {
@@ -108,8 +92,12 @@ _
             summary => 'Exclude trees that carry one of these tags',
             description => <<'_',
 
-After 'include_tags' is evaluated, all subtrees that are marked by any of the
-exclude tags will be removed from export.
+If the whole document doesn't have any of these tags, then the whole document
+will be exported. Otherwise, trees that do not carry one of these tags will be
+excluded. If a selected tree is a subtree, the heading hierarchy above it will
+also be selected for export, but not the text below those headings.
+
+exclude_tags is evaluated after include_tags.
 
 _
         }],
@@ -137,21 +125,8 @@ sub export_org_to_html {
         return [400, "Please specify source_file/source_str"];
     }
 
-    my $include_tags = $args{include_tags};
-    if ($include_tags) {
-        my $doc_has_include_tags;
-        for my $h ($doc->find('Org::Element::Headline')) {
-            my @htags = $h->get_tags;
-            if (defined(first {$_ ~~ @htags} @$include_tags)) {
-                $doc_has_include_tags++;
-                last;
-            }
-        }
-        $include_tags = undef unless $doc_has_include_tags;
-    }
-
     my $obj = __PACKAGE__->new(
-        include_tags => $include_tags,
+        include_tags => $args{include_tags},
         exclude_tags => $args{exclude_tags},
         css_url      => $args{css_url},
         naked        => $args{naked},
@@ -170,24 +145,13 @@ sub export_org_to_html {
 
 =head1 METHODS
 
-=for Pod::Coverage BUILD
-
-=head2 $oeh->export($doc)
-
-Export an Org document into HTML. $org is L<Org::Document> object. Returns
-$html, which is the HTML string. Dies on error.
+=for Pod::Coverage BUILD export_.+
 
 =cut
 
-sub export {
-    my ($self, $elem) = @_;
-    $self->_export_elems($elem);
-}
+=head2 $exp->export_document($doc) => HTML
 
-=head2 $oeh->export_document($doc) => $html
-
-Given an L<Org::Element::Block> element, export it to HTML. Override this in
-subclass to provide custom behavior.
+Export document to HTML.
 
 =cut
 
@@ -215,7 +179,7 @@ sub export_document {
 
         push @$html, "<BODY>\n";
     }
-    push @$html, $self->_export_elems(@{$doc->children});
+    push @$html, $self->export_elements(@{$doc->children});
     unless ($self->naked) {
         push @$html, "</BODY>\n\n";
         push @$html, "</HTML>\n";
@@ -223,13 +187,6 @@ sub export_document {
 
     join "", @$html;
 }
-
-=head2 $oeh->export_block($elem) => $html
-
-Given an L<Org::Element::Block> element, export it to HTML. Override this in
-subclass to provide custom behavior.
-
-=cut
 
 sub export_block {
     my ($self, $elem) = @_;
@@ -241,13 +198,6 @@ sub export_block {
     );
 }
 
-=head2 $oeh->export_short_example($elem) => $html
-
-Given an L<Org::Element::ShortExample> element, export it to HTML. Override this
-in subclass to provide custom behavior.
-
-=cut
-
 sub export_short_example {
     my ($self, $elem) = @_;
     join "", (
@@ -256,13 +206,6 @@ sub export_short_example {
         "</PRE>\n"
     );
 }
-
-=head2 $oeh->export_comment($elem) => $html
-
-Given an L<Org::Element::Comment> element, export it to HTML. Override this
-in subclass to provide custom behavior.
-
-=cut
 
 sub export_comment {
     my ($self, $elem) = @_;
@@ -273,38 +216,17 @@ sub export_comment {
     );
 }
 
-=head2 $oeh->export_drawer($elem) => $html
-
-Given an L<Org::Element::Drawer> element, export it to HTML. Override this in
-subclass to provide custom behavior.
-
-=cut
-
 sub export_drawer {
     my ($self, $elem) = @_;
     # currently not exported
     '';
 }
 
-=head2 $oeh->export_footnote($elem) => $html
-
-Given an L<Org::Element::Footnote> element, export it to HTML. Override this in
-subclass to provide custom behavior.
-
-=cut
-
 sub export_footnote {
     my ($self, $elem) = @_;
     # currently not exported
     '';
 }
-
-=head2 $oeh->export_headline($elem) => $html
-
-Given an L<Org::Element::Headline> element, export it to HTML. Override this in
-subclass to provide custom behavior.
-
-=cut
 
 sub export_headline {
     my ($self, $elem) = @_;
@@ -340,18 +262,11 @@ sub export_headline {
 
     join "", (
         "<H" , $elem->level, ">",
-        $self->_export_elems($elem->title),
+        $self->export_elements($elem->title),
         "</H", $elem->level, ">\n\n",
-        $self->_export_elems(@children)
+        $self->export_elements(@children)
     );
 }
-
-=head2 $oeh->export_list($elem) => $html
-
-Given an L<Org::Element::List> element, export it to HTML. Override this in
-subclass to provide custom behavior.
-
-=cut
 
 sub export_list {
     my ($self, $elem) = @_;
@@ -362,17 +277,10 @@ sub export_list {
     elsif ($type eq 'U') { $tag = 'UL' }
     join "", (
         "<$tag>\n",
-        $self->_export_elems(@{$elem->children // []}),
+        $self->export_elements(@{$elem->children // []}),
         "</$tag>\n\n"
     );
 }
-
-=head2 $oeh->export_list_item($elem) => $html
-
-Given an L<Org::Element::ListItem> element, export it to HTML. Override this in
-subclass to provide custom behavior.
-
-=cut
 
 sub export_list_item {
     my ($self, $elem) = @_;
@@ -389,12 +297,12 @@ sub export_list_item {
     }
 
     if ($elem->desc_term) {
-        push @$html, $self->_export_elems($elem->desc_term);
+        push @$html, $self->export_elements($elem->desc_term);
         push @$html, "</DT>";
         push @$html, "<DD>";
     }
 
-    push @$html, $self->_export_elems(@{$elem->children}) if $elem->children;
+    push @$html, $self->export_elements(@{$elem->children}) if $elem->children;
 
     if ($elem->desc_term) {
         push @$html, "</DD>\n";
@@ -405,25 +313,11 @@ sub export_list_item {
     join "", @$html;
 }
 
-=head2 $oeh->export_radio_target($elem) => $html
-
-Given an L<Org::Element::RadioTarget> element, export it to HTML. Override this
-in subclass to provide custom behavior.
-
-=cut
-
 sub export_radio_target {
     my ($self, $elem) = @_;
     # currently not exported
     '';
 }
-
-=head2 $oeh->export_setting($elem) => $html
-
-Given an L<Org::Element::Setting> element, export it to HTML. Override this
-in subclass to provide custom behavior.
-
-=cut
 
 sub export_setting {
     my ($self, $elem) = @_;
@@ -431,61 +325,33 @@ sub export_setting {
     '';
 }
 
-=head2 $oeh->export_table($elem) => $html
-
-Given an L<Org::Element::Table> element, export it to HTML. Override this in
-subclass to provide custom behavior.
-
-=cut
-
 sub export_table {
     my ($self, $elem) = @_;
     join "", (
         "<TABLE BORDER>\n",
-        $self->_export_elems(@{$elem->children // []}),
+        $self->export_elements(@{$elem->children // []}),
         "</TABLE>\n\n"
     );
 }
-
-=head2 $oeh->export_table_row($elem) => $html
-
-Given an L<Org::Element::TableRow> element, export it to HTML. Override this in
-subclass to provide custom behavior.
-
-=cut
 
 sub export_table_row {
     my ($self, $elem) = @_;
     join "", (
         "<TR>",
-        $self->_export_elems(@{$elem->children // []}),
+        $self->export_elements(@{$elem->children // []}),
         "</TR>\n"
     );
 }
-
-=head2 $oeh->export_table_cell($elem) => $html
-
-Given an L<Org::Element::TableCell> element, export it to HTML. Override this in
-subclass to provide custom behavior.
-
-=cut
 
 sub export_table_cell {
     my ($self, $elem) = @_;
 
     join "", (
         "<TD>",
-            $self->_export_elems(@{$elem->children // []}),
+            $self->export_elements(@{$elem->children // []}),
         "</TD>"
     );
 }
-
-=head2 $oeh->export_table_vline($elem) => $html
-
-Given an L<Org::Element::TableVLine> element, export it to HTML. Override this
-in subclass to provide custom behavior.
-
-=cut
 
 sub export_table_vline {
     my ($self, $elem) = @_;
@@ -493,12 +359,11 @@ sub export_table_vline {
     '';
 }
 
-=head2 $oeh->export_target($elem) => $html
-
-Given an L<Org::Element::Target> element, export it to HTML. Override this in
-subclass to provide custom behavior.
-
-=cut
+sub __escape_target {
+    my $target = shift;
+    $target =~ s/[^\w]+/_/g;
+    $target;
+}
 
 sub export_target {
     my ($self, $elem) = @_;
@@ -507,13 +372,6 @@ sub export_target {
         "<A NAME=\"", __escape_target($elem->target), "\">"
     );
 }
-
-=head2 $oeh->export_text($elem) => $html
-
-Given an L<Org::Element::Text> element, export it to HTML. Override this in
-subclass to provide custom behavior.
-
-=cut
 
 sub export_text {
     my ($self, $elem) = @_;
@@ -533,18 +391,11 @@ sub export_text {
     my $text = encode_entities($elem->text);
     $text =~ s/\R\R/\n\n<p>\n\n/g;
     push @$html, $text;
-    push @$html, $self->_export_elems(@{$elem->children}) if $elem->children;
+    push @$html, $self->export_elements(@{$elem->children}) if $elem->children;
     push @$html, "</$tag>" if $tag;
 
     join "", @$html;
 }
-
-=head2 $oeh->export_time_range($elem) => $html
-
-Given an L<Org::Element::TimeRange> element, export it to HTML. Override this in
-subclass to provide custom behavior.
-
-=cut
 
 sub export_time_range {
     my ($self, $elem) = @_;
@@ -552,25 +403,11 @@ sub export_time_range {
     $elem->as_string;
 }
 
-=head2 $oeh->export_timestamp($elem) => $html
-
-Given an L<Org::Element::Timestamp> element, export it to HTML. Override this in
-subclass to provide custom behavior.
-
-=cut
-
 sub export_timestamp {
     my ($self, $elem) = @_;
 
     $elem->as_string;
 }
-
-=head2 $oeh->export_link($elem) => $html
-
-Given an L<Org::Element::Link> element, export it to HTML. Override this in
-subclass to provide custom behavior.
-
-=cut
 
 sub export_link {
     my ($self, $elem) = @_;
@@ -586,79 +423,13 @@ sub export_link {
     }
     push @$html, "\">";
     if ($elem->description) {
-        push @$html, $self->_export_elems($elem->description);
+        push @$html, $self->export_elements($elem->description);
     } else {
         push @$html, $elem->link;
     }
     push @$html, "</A>";
 
     join "", @$html;
-}
-
-sub _export_elems {
-    my ($self, @elems) = @_;
-
-    my $html = [];
-  ELEM:
-    for my $elem (@elems) {
-        $log->tracef("exporting element %s (%s) ...", ref($elem),
-                     elide(printable($elem->as_string), 30));
-        my $elc = ref($elem);
-
-        if ($elc eq 'Org::Element::Block') {
-            push @$html, $self->export_block($elem);
-        } elsif ($elc eq 'Org::Element::ShortExample') {
-            push @$html, $self->export_short_example($elem);
-        } elsif ($elc eq 'Org::Element::Comment') {
-            push @$html, $self->export_comment($elem);
-        } elsif ($elc eq 'Org::Element::Drawer') {
-            push @$html, $self->export_drawer($elem);
-        } elsif ($elc eq 'Org::Element::Footnote') {
-            push @$html, $self->export_footnote($elem);
-        } elsif ($elc eq 'Org::Element::Headline') {
-            push @$html, $self->export_headline($elem);
-        } elsif ($elc eq 'Org::Element::List') {
-            push @$html, $self->export_list($elem);
-        } elsif ($elc eq 'Org::Element::ListItem') {
-            push @$html, $self->export_list_item($elem);
-        } elsif ($elc eq 'Org::Element::RadioTarget') {
-            push @$html, $self->export_radio_target($elem);
-        } elsif ($elc eq 'Org::Element::Setting') {
-            push @$html, $self->export_setting($elem);
-        } elsif ($elc eq 'Org::Element::Table') {
-            push @$html, $self->export_table($elem);
-        } elsif ($elc eq 'Org::Element::TableCell') {
-            push @$html, $self->export_table_cell($elem);
-        } elsif ($elc eq 'Org::Element::TableRow') {
-            push @$html, $self->export_table_row($elem);
-        } elsif ($elc eq 'Org::Element::TableVLine') {
-            push @$html, $self->export_table_vline($elem);
-        } elsif ($elc eq 'Org::Element::Target') {
-            push @$html, $self->export_target($elem);
-        } elsif ($elc eq 'Org::Element::Text') {
-            push @$html, $self->export_text($elem);
-        } elsif ($elc eq 'Org::Element::Link') {
-            push @$html, $self->export_link($elem);
-        } elsif ($elc eq 'Org::Element::TimeRange') {
-            push @$html, $self->export_time_range($elem);
-        } elsif ($elc eq 'Org::Element::Timestamp') {
-            push @$html, $self->export_timestamp($elem);
-        } elsif ($elc eq 'Org::Document') {
-            push @$html, $self->export_document($elem);
-        } else {
-            warn "Don't know how to export $elc element, skipped";
-            push @$html, $self->_export_elems(@{$elem->children})
-                if $elem->children;
-        }
-    }
-
-    join "", @$html;
-}
-
-sub __escape_target {
-    my $target = shift;
-    $target =~ s/[^\w]+/_/g;
-    $target;
 }
 
 1;
@@ -684,11 +455,10 @@ __END__
  my $oeh = Org::Export::HTML->new();
  my $html = $oeh->export($doc); # $doc is Org::Document object
 
+
 =head1 DESCRIPTION
 
-Export Org format to HTML. Currently very barebones; this module is more of a
-proof-of-concept for L<Org::Parser>. For any serious exporting, currently you're
-better-off using Emacs' org-mode HTML export facility.
+Export Org format to HTML. To customize, you can subclass this module.
 
 This module uses L<Log::Any> logging framework.
 
