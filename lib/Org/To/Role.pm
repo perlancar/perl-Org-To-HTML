@@ -1,4 +1,4 @@
-package Org::Export::Role;
+package Org::To::Role;
 # ABSTRACT: Role for Org exporters
 
 use 5.010;

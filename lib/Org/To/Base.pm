@@ -1,4 +1,4 @@
-package Org::Export::Base;
+package Org::To::Base;
 # ABSTRACT: Base class for Org exporters
 
 use 5.010;
@@ -141,16 +141,16 @@ __END__
 
 =head1 SYNOPSIS
 
- # Not to be used directly. Use one of its subclasses, like Org::Export::HTML.
+ # Not to be used directly. Use one of its subclasses, like Org::To::HTML.
 
 
 =head1 DESCRIPTION
 
 This module is a base class for Org exporters. To create an exporter, subclass
-from this class (as well as add L<Org::Export::Role> role) and provide an
+from this class (as well as add L<Org::To::Role> role) and provide an
 implementation for the export_*() methods. Add extra attributes for export
-options as necessary (for example, Org::Export::HTML adds C<html_title>,
-C<css_url>, and so on).
+options as necessary (for example, Org::To::HTML adds C<html_title>, C<css_url>,
+and so on).
 
 
 =cut

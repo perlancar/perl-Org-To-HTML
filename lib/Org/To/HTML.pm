@@ -1,4 +1,4 @@
-package Org::Export::HTML;
+package Org::To::HTML;
 # ABSTRACT: Export Org document to HTML
 
 use 5.010;
@@ -11,13 +11,13 @@ use HTML::Entities qw/encode_entities/;
 use Org::Document;
 
 use Moo;
-with 'Org::Export::Role';
-extends 'Org::Export::Base';
+with 'Org::To::Role';
+extends 'Org::To::Base';
 
 require Exporter;
 our @ISA;
 push @ISA,       qw(Exporter);
-our @EXPORT_OK = qw(export_org_to_html);
+our @EXPORT_OK = qw(org_to_html);
 
 =head1 ATTRIBUTES
 
@@ -51,12 +51,12 @@ has css_url => (is => 'rw');
 
 
 our %SPEC;
-$SPEC{export_org_to_html} = {
+$SPEC{org_to_html} = {
     summary => 'Export Org document to HTML',
     description => <<'_',
 
 This is the non-OO interface. For more customization, consider subclassing
-Org::Export::HTML.
+Org::To::HTML.
 
 _
     args => {
@@ -112,7 +112,7 @@ _
         }],
     }
 };
-sub export_org_to_html {
+sub org_to_html {
     my %args = @_;
 
     my $doc;
@@ -437,10 +437,10 @@ __END__
 
 =head1 SYNOPSIS
 
- use Org::Export::HTML qw(export_org_to_html);
+ use Org::To::HTML qw(org_to_html);
 
  # non-OO interface
- my $res = export_org_to_html(
+ my $res = org_to_html(
      source_file   => 'todo.org', # or source_str
      #target_file  => 'todo.html', # defaults return the HTML in $res->[2]
      #html_title   => 'My Todo List', # defaults to file name
@@ -452,7 +452,7 @@ __END__
  die "Failed" unless $res->[0] == 200;
 
  # OO interface
- my $oeh = Org::Export::HTML->new();
+ my $oeh = Org::To::HTML->new();
  my $html = $oeh->export($doc); # $doc is Org::Document object
 
 

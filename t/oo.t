@@ -8,7 +8,7 @@ use FindBin '$Bin';
 use lib $Bin, "$Bin/t";
 
 use File::Slurp;
-use Org::Export::HTML;
+use Org::To::HTML;
 use Org::Parser;
 use Test::More 0.96;
 require "testlib.pl";
@@ -20,13 +20,13 @@ my $doc = $orgp->parse(<<'_');
 _
 
 # test OO interface
-my $oeh = Org::Export::HTML->new(naked=>1);
+my $oeh = Org::To::HTML->new(naked=>1);
 is($oeh->export($doc), "<H1>heading 1</H1>\n\n", "export method");
 
 # test subclass
 package MyHTMLExporter;
 use Moo;
-extends 'Org::Export::HTML';
+extends 'Org::To::HTML';
 sub export_setting {
     my ($self, $elem) = @_;
     "<!-- setting:".$elem->name." -->\n";

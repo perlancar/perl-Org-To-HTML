@@ -11,7 +11,7 @@ use File::Slurp;
 use Test::More 0.96;
 require "testlib.pl";
 
-test_export_html(
+test_to_html(
     name => 'example.org',
     args => {
         source_file=>"$Bin/data/example.org",
@@ -22,7 +22,7 @@ test_export_html(
     result => scalar read_file("$Bin/data/example.org.html"),
 );
 
-test_export_html(
+test_to_html(
     name => 'example.org',
     args => {
         source_file=>"$Bin/data/naked.org",

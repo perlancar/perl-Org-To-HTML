@@ -1,4 +1,14 @@
-Revision history for Org-Export-HTML
+Revision history for Org-To-HTML
+
+0.05    2011-08-02
+
+        No functional changes.
+
+        [INCOMPATIBLE CHANGES]
+
+        - Rename dist from Org-Export-HTML to Org-To-HTML; rename function
+          export_org_to_html to org_to_html.
+
 
 0.04    2011-06-16
 

@@ -4,17 +4,17 @@ use 5.010;
 use strict;
 use warnings;
 
-use Org::Export::HTML qw(export_org_to_html);
+use Org::To::HTML qw(org_to_html);
 use Test::Differences;
 use Test::More 0.96;
 
-sub test_export_html {
+sub test_to_html {
     my %args = @_;
 
     subtest $args{name} => sub {
         my $res;
         eval {
-            $res = export_org_to_html(%{$args{args}});
+            $res = org_to_html(%{$args{args}});
         };
         my $eval_err = $@;
 
