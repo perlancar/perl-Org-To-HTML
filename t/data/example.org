@@ -1,7 +1,7 @@
 * heading 1 >
 ** heading 1.1
 An example >:
- : a short example *bold* >
+ : a fixed width section *bold* >
 Another example:
  #+BEGIN_EXAMPLE
  a longer example >

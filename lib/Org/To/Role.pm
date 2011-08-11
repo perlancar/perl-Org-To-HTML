@@ -11,7 +11,7 @@ use String::Escape qw/elide printable/;
 
 requires 'export_document';
 requires 'export_block';
-requires 'export_short_example';
+requires 'export_fixed_width_section';
 requires 'export_comment';
 requires 'export_drawer';
 requires 'export_footnote';

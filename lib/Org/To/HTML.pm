@@ -198,11 +198,11 @@ sub export_block {
     );
 }
 
-sub export_short_example {
+sub export_fixed_width_section {
     my ($self, $elem) = @_;
     join "", (
-        "<PRE CLASS=\"short_example\">",
-        encode_entities($elem->example),
+        "<PRE CLASS=\"fixed_width_section\">",
+        encode_entities($elem->text),
         "</PRE>\n"
     );
 }
