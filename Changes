@@ -1,5 +1,15 @@
 Revision history for Org-To-HTML
 
+0.06    2011-08-11
+
+        No functional changes.
+
+        [INCOMPATIBLE CHANGES]
+
+        - Update to Org::Parser 0.18 (Org::Element::ShortExample becomes
+          Org::Element::FixedWidthSection).
+
+
 0.05    2011-08-02
 
         No functional changes.
