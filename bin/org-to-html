@@ -7,5 +7,5 @@ use 5.010;
 use strict;
 use warnings;
 
-use Sub::Spec::CmdLine qw(run);
-run(module => 'Org::To::HTML', sub=>'org_to_html');
+use Perinci::CmdLine;
+Perinci::CmdLine->new(url=>'/Org/To/HTML/org_to_html')->run;
