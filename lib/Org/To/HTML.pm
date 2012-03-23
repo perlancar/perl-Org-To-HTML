@@ -464,7 +464,7 @@ This module uses L<Log::Any> logging framework.
 
 This module uses L<Moo> for object system.
 
-This module's functions have L<Sub::Spec> specs.
+This module has L<Rinci> metadata.
 
 
 =head1 FUNCTIONS
@@ -473,6 +473,8 @@ None is exported by default, but they can be.
 
 
 =head1 SEE ALSO
+
+For more information about Org document format, visit http://orgmode.org/
 
 L<Org::Parser>
 
