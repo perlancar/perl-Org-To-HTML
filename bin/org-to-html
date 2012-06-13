@@ -1,11 +1,11 @@
 #!/usr/bin/perl
 
-# workaround for dzil
-package org_to_html;
-
 use 5.010;
 use strict;
 use warnings;
 
 use Perinci::CmdLine;
 Perinci::CmdLine->new(url=>'/Org/To/HTML/org_to_html')->run;
+
+# ABSTRACT: Convert Org to HTML document
+# PODNAME: org-to-html
