@@ -1,51 +1,13 @@
 package Org::To::Base;
-# ABSTRACT: Base class for Org exporters
 
-use 5.010;
+use 5.010001;
 use Log::Any '$log';
 
 use List::Util qw(first);
 use Moo;
 
-=head1 ATTRIBUTES
-
-=head2 include_tags => ARRAYREF
-
-Works like Org's 'org-export-select-tags' variable. If the whole document
-doesn't have any of these tags, then the whole document will be exported.
-Otherwise, trees that do not carry one of these tags will be excluded. If a
-selected tree is a subtree, the heading hierarchy above it will also be selected
-for export, but not the text below those headings.
-
-=cut
-
 has include_tags => (is => 'rw');
-
-=head2 exclude_tags => ARRAYREF
-
-If the whole document doesn't have any of these tags, then the whole document
-will be exported. Otherwise, trees that do not carry one of these tags will be
-excluded. If a selected tree is a subtree, the heading hierarchy above it will
-also be selected for export, but not the text below those headings.
-
-exclude_tags is evaluated after include_tags.
-
-=cut
-
 has exclude_tags => (is => 'rw');
-
-
-=head1 METHODS
-
-=for Pod::Coverage BUILD
-
-=cut
-
-=head2 $exp->export($doc) => STR
-
-Export Org.
-
-=cut
 
 sub export {
     my ($self, $doc) = @_;
@@ -65,14 +27,6 @@ sub export {
 
     $self->export_elements($doc);
 }
-
-=head2 $exp->export_elements(@elems) => STR
-
-Export Org element objects and with the children, recursively. Will call various
-export_*() methods according to element class. Should return a string which is
-the exported document.
-
-=cut
 
 sub export_elements {
     my ($self, @elems) = @_;
@@ -137,7 +91,9 @@ sub export_elements {
 }
 
 1;
-__END__
+# ABSTRACT: Base class for Org exporters
+
+=for Pod::Coverage BUILD
 
 =head1 SYNOPSIS
 
@@ -153,4 +109,34 @@ options as necessary (for example, Org::To::HTML adds C<html_title>, C<css_url>,
 and so on).
 
 
-=cut
+=head1 ATTRIBUTES
+
+=head2 include_tags => ARRAYREF
+
+Works like Org's 'org-export-select-tags' variable. If the whole document
+doesn't have any of these tags, then the whole document will be exported.
+Otherwise, trees that do not carry one of these tags will be excluded. If a
+selected tree is a subtree, the heading hierarchy above it will also be selected
+for export, but not the text below those headings.
+
+=head2 exclude_tags => ARRAYREF
+
+If the whole document doesn't have any of these tags, then the whole document
+will be exported. Otherwise, trees that do not carry one of these tags will be
+excluded. If a selected tree is a subtree, the heading hierarchy above it will
+also be selected for export, but not the text below those headings.
+
+exclude_tags is evaluated after include_tags.
+
+
+=head1 METHODS
+
+=head2 $exp->export($doc) => STR
+
+Export Org.
+
+=head2 $exp->export_elements(@elems) => STR
+
+Export Org element objects and with the children, recursively. Will call various
+export_*() methods according to element class. Should return a string which is
+the exported document.
