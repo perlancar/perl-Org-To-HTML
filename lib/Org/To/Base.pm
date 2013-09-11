@@ -5,6 +5,7 @@ use Log::Any '$log';
 
 use List::Util qw(first);
 use Moo;
+use experimental 'smartmatch';
 
 has include_tags => (is => 'rw');
 has exclude_tags => (is => 'rw');

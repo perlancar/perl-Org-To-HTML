@@ -11,6 +11,7 @@ use HTML::Entities qw/encode_entities/;
 use Org::Document;
 
 use Moo;
+use experimental 'smartmatch';
 with 'Org::To::Role';
 extends 'Org::To::Base';
 
