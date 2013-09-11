@@ -1,5 +1,4 @@
 package Org::To::Role;
-# ABSTRACT: Role for Org exporters
 
 use 5.010;
 use strict;
@@ -8,6 +7,8 @@ use Log::Any '$log';
 
 use Moo::Role;
 use String::Escape qw/elide printable/;
+
+# VERSION
 
 requires 'export_document';
 requires 'export_block';
@@ -31,3 +32,4 @@ requires 'export_timestamp';
 requires 'export_link';
 
 1;
+# ABSTRACT: Role for Org exporters

@@ -1,5 +1,4 @@
 package Org::To::HTML;
-# ABSTRACT: Export Org document to HTML
 
 use 5.010;
 use Log::Any '$log';
@@ -15,41 +14,16 @@ use experimental 'smartmatch';
 with 'Org::To::Role';
 extends 'Org::To::Base';
 
+# VERSION
+
 require Exporter;
 our @ISA;
 push @ISA,       qw(Exporter);
 our @EXPORT_OK = qw(org_to_html);
 
-=head1 ATTRIBUTES
-
-=cut
-
-=head2 naked => BOOL
-
-If set to true, export_document() will not output HTML/HEAD/BODY wrapping
-element. Default is false.
-
-=cut
-
 has naked => (is => 'rw');
-
-=head2 html_title => STR
-
-Title to use in TITLE element. If unset, defaults to "(no title)" when
-exporting.
-
-=cut
-
 has html_title => (is => 'rw');
-
-=head2 css_url => STR
-
-If set, export_document() will output a LINK element pointing to this CSS.
-
-=cut
-
 has css_url => (is => 'rw');
-
 
 our %SPEC;
 $SPEC{org_to_html} = {
@@ -143,18 +117,6 @@ sub org_to_html {
         return [200, "OK", $html];
     }
 }
-
-=head1 METHODS
-
-=for Pod::Coverage BUILD export_.+
-
-=cut
-
-=head2 $exp->export_document($doc) => HTML
-
-Export document to HTML.
-
-=cut
 
 sub export_document {
     my ($self, $doc) = @_;
@@ -434,7 +396,9 @@ sub export_link {
 }
 
 1;
-__END__
+# ABSTRACT: Export Org document to HTML
+
+=for Pod::Coverage ^(export_.+)$
 
 =head1 SYNOPSIS
 
@@ -468,9 +432,30 @@ This module uses L<Moo> for object system.
 This module has L<Rinci> metadata.
 
 
-=head1 FUNCTIONS
+=head1 ATTRIBUTES
 
-None is exported by default, but they can be.
+=head2 naked => BOOL
+
+If set to true, export_document() will not output HTML/HEAD/BODY wrapping
+element. Default is false.
+
+=head2 html_title => STR
+
+Title to use in TITLE element. If unset, defaults to "(no title)" when
+exporting.
+
+=head2 css_url => STR
+
+If set, export_document() will output a LINK element pointing to this CSS.
+
+
+=head1 METHODS
+
+=head1 new(%args)
+
+=head2 $exp->export_document($doc) => HTML
+
+Export document to HTML.
 
 
 =head1 SEE ALSO

@@ -1,13 +1,20 @@
 Revision history for Org-To-HTML
 
-0.07    2012-03-22
+0.08    2013-09-11 (SHARYANTO)
 
-        No functional changes. Replace Sub::Spec::CmdLine with Perinci::CmdLine.
+        - No functional changes. Add 'use experimental smartmatch' for Perl
+          5.18+.
 
 
-0.06    2011-08-11
+0.07    2012-03-22 (SHARYANTO)
 
-        No functional changes.
+        - No functional changes. Replace Sub::Spec::CmdLine with
+          Perinci::CmdLine.
+
+
+0.06    2011-08-11 (SHARYANTO)
+
+        - No functional changes.
 
         [INCOMPATIBLE CHANGES]
 
@@ -15,9 +22,9 @@ Revision history for Org-To-HTML
           Org::Element::FixedWidthSection).
 
 
-0.05    2011-08-02
+0.05    2011-08-02 (SHARYANTO)
 
-        No functional changes.
+        - No functional changes.
 
         [INCOMPATIBLE CHANGES]
 
@@ -25,14 +32,14 @@ Revision history for Org-To-HTML
           export_org_to_html to org_to_html.
 
 
-0.04    2011-06-16
+0.04    2011-06-16 (SHARYANTO)
 
-        No functional changes. Internal changes: split base class
-        (Org::Export::Base) and role (Org::Export::Role) to allow for other
-        exporter classes.
+        - No functional changes. Internal changes: split base class
+          (Org::Export::Base) and role (Org::Export::Role) to allow for other
+          exporter classes.
 
 
-0.03    2011-05-25
+0.03    2011-05-25 (SHARYANTO)
 
         [ENHANCEMENTS]
 
@@ -58,6 +65,6 @@ Revision history for Org-To-HTML
         - Add tests.
 
 
-0.01    2011-03-23
+0.01    2011-03-23 (SHARYANTO)
 
         - First release.

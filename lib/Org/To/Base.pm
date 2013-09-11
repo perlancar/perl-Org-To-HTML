@@ -7,6 +7,8 @@ use List::Util qw(first);
 use Moo;
 use experimental 'smartmatch';
 
+# VERSION
+
 has include_tags => (is => 'rw');
 has exclude_tags => (is => 'rw');
 
