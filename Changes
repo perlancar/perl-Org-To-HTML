@@ -1,5 +1,13 @@
 Revision history for Org-To-HTML
 
+0.09    2014-01-25 (SHARYANTO)
+
+        - Bugfix: Have not yet loaded String::Escape when logging.
+
+        - Internal refactoring to make base class more usable by
+          Org::To::vCard::Addressbook (and other subclasses).
+
+
 0.08    2013-09-11 (SHARYANTO)
 
         - No functional changes. Add 'use experimental smartmatch' for Perl
