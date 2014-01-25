@@ -191,40 +191,6 @@ sub export_footnote {
     '';
 }
 
-sub _included_children {
-    my ($self, $elem) = @_;
-
-    my @htags = $elem->get_tags;
-    my @children = @{$elem->children // []};
-    if ($self->include_tags) {
-        if (!defined(first {$_ ~~ @htags} @{$self->include_tags})) {
-            # headline doesn't contain include_tags, select only
-            # suheadlines that contain them
-            @children = ();
-            for my $c (@{ $elem->children // []}) {
-                next unless $c->isa('Org::Element::Headline');
-                my @hl_included = $elem->find(
-                    sub {
-                        my $el = shift;
-                        return unless
-                            $elem->isa('Org::Element::Headline');
-                        my @t = $elem->get_tags;
-                        return defined(first {$_ ~~ @t}
-                                           @{$self->include_tags});
-                    });
-                next unless @hl_included;
-                push @children, $c;
-            }
-            return () unless @children;
-        }
-    }
-    if ($self->exclude_tags) {
-        return () if defined(first {$_ ~~ @htags}
-                                 @{$self->exclude_tags});
-    }
-    @children;
-}
-
 sub export_headline {
     my ($self, $elem) = @_;
 
