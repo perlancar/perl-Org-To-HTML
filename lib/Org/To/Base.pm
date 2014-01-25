@@ -37,9 +37,11 @@ sub export_elements {
     my $res = [];
   ELEM:
     for my $elem (@elems) {
+        require String::Escape;
         if ($log->is_trace) {
             $log->tracef("exporting element %s (%s) ...", ref($elem),
-                         elide(printable($elem->as_string), 30));
+                         String::Escape::elide(
+                             String::Escape::printable($elem->as_string), 30));
         }
         my $elc = ref($elem);
 
