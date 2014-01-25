@@ -191,7 +191,7 @@ sub export_footnote {
     '';
 }
 
-sub export_headline {
+sub _included_children {
     my ($self, $elem) = @_;
 
     my @htags = $elem->get_tags;
@@ -215,13 +215,20 @@ sub export_headline {
                 next unless @hl_included;
                 push @children, $c;
             }
-            return '' unless @children;
+            return () unless @children;
         }
     }
     if ($self->exclude_tags) {
-        return '' if defined(first {$_ ~~ @htags}
+        return () if defined(first {$_ ~~ @htags}
                                  @{$self->exclude_tags});
     }
+    @children;
+}
+
+sub export_headline {
+    my ($self, $elem) = @_;
+
+    my @children = $self->_included_children($elem);
 
     join "", (
         "<H" , $elem->level, ">",
