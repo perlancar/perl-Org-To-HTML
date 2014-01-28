@@ -326,6 +326,7 @@ sub export_text {
     push @$html, "<$tag>" if $tag;
     my $text = encode_entities($elem->text);
     $text =~ s/\R\R/\n\n<p>\n\n/g;
+    $text =~ s/(?<=.)\R/ /g;
     push @$html, $text;
     push @$html, $self->export_elements(@{$elem->children}) if $elem->children;
     push @$html, "</$tag>" if $tag;
