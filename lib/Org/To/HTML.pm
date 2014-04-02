@@ -399,6 +399,8 @@ sub export_link {
 
 Export Org format to HTML. To customize, you can subclass this module.
 
+A command-line utility is included: L<org-to-html>.
+
 This module uses L<Log::Any> logging framework.
 
 This module uses L<Moo> for object system.
@@ -437,5 +439,7 @@ Export document to HTML.
 For more information about Org document format, visit http://orgmode.org/
 
 L<Org::Parser>
+
+L<org-to-html>
 
 =cut
