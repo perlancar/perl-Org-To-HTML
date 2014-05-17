@@ -7,7 +7,6 @@ use warnings;
 use FindBin '$Bin';
 use lib $Bin, "$Bin/t";
 
-use File::Slurp;
 use Org::To::HTML;
 use Org::Parser;
 use Test::More 0.96;
