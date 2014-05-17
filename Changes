@@ -1,5 +1,12 @@
 Revision history for Org-To-HTML
 
+0.12    2014-05-17 (SHARYANTO)
+
+        - No functional changes.
+
+        - Replace File::Slurp with File::Slurp::Tiny.
+
+
 0.11    2014-01-29 (SHARYANTO)
 
         - Replace newlines in non-PRE text with space, so resulting HTML is more

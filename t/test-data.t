@@ -7,7 +7,7 @@ use warnings;
 use FindBin '$Bin';
 use lib $Bin, "$Bin/t";
 
-use File::Slurp qw(read_file);
+use File::Slurp::Tiny qw(read_file);
 use Test::More 0.96;
 require "testlib.pl";
 

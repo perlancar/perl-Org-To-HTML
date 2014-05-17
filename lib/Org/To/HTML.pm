@@ -27,6 +27,7 @@ has css_url => (is => 'rw');
 
 our %SPEC;
 $SPEC{org_to_html} = {
+    v => 1.1,
     summary => 'Export Org document to HTML',
     description => <<'_',
 
@@ -35,23 +36,26 @@ Org::To::HTML.
 
 _
     args => {
-        source_file => ['str' => {
+        source_file => {
             summary => 'Source Org file to export',
-        }],
-        source_str => ['str' => {
+            schema => ['str' => {}],
+        },
+        source_str => {
             summary => 'Alternatively you can specify Org string directly',
-        }],
-        target_file => ['str' => {
+            schema => ['str' => {}],
+        },
+        target_file => {
             summary => 'HTML file to write to',
+            schema => ['str' => {}],
             description => <<'_',
 
 If not specified, HTML string will be returned.
 
 _
-        }],
-        include_tags => ['array' => {
-            of => 'str*',
+        },
+        include_tags => {
             summary => 'Include trees that carry one of these tags',
+            schema => ['array' => {of => 'str*'}],
             description => <<'_',
 
 Works like Org's 'org-export-select-tags' variable. If the whole document
@@ -61,10 +65,10 @@ selected tree is a subtree, the heading hierarchy above it will also be selected
 for export, but not the text below those headings.
 
 _
-        }],
-        exclude_tags => ['array' => {
-            of => 'str*',
+        },
+        exclude_tags => {
             summary => 'Exclude trees that carry one of these tags',
+            schema => ['array' => {of => 'str*'}],
             description => <<'_',
 
 If the whole document doesn't have any of these tags, then the whole document
@@ -75,17 +79,20 @@ also be selected for export, but not the text below those headings.
 exclude_tags is evaluated after include_tags.
 
 _
-        }],
-        html_title => ['str' => {
+        },
+        html_title => {
             summary => 'HTML document title, defaults to source_file',
-        }],
-        css_url => ['str' => {
+            schema => ['str' => {}],
+        },
+        css_url => {
             summary => 'Add a link to CSS document',
-        }],
-        naked => ['bool' => {
+            schema => ['str' => {}],
+        },
+        naked => {
             summary => 'Don\'t wrap exported HTML with HTML/HEAD/BODY elements',
-        }],
-    }
+            schema => ['bool' => {}],
+        },
+    },
 };
 sub org_to_html {
     my %args = @_;
