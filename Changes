@@ -1,5 +1,13 @@
 Revision history for Org-To-HTML
 
+0.13    2014-07-22 (SHARYANTO)
+
+        - No functional changes.
+
+        - Switch CLI scripts from using Perinci::CmdLine to
+          Perinci::CmdLine::Any to reduce size of dependencies.
+
+
 0.12    2014-05-17 (SHARYANTO)
 
         - No functional changes.
