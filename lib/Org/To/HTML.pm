@@ -408,12 +408,6 @@ Export Org format to HTML. To customize, you can subclass this module.
 
 A command-line utility is included: L<org-to-html>.
 
-This module uses L<Log::Any> logging framework.
-
-This module uses L<Moo> for object system.
-
-This module has L<Rinci> metadata.
-
 
 =head1 ATTRIBUTES
 
