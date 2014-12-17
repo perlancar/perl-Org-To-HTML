@@ -377,7 +377,7 @@ sub export_link {
 }
 
 1;
-# ABSTRACT: Export Org document to HTML
+# ABSTRACT:
 
 =for Pod::Coverage ^(export_.+)$
 
