@@ -1,7 +1,10 @@
 package Org::To::HTML;
 
+# DATE
+# VERSION
+
 use 5.010;
-use Log::Any '$log';
+use Log::Any::IfLOG '$log';
 
 use vars qw($VERSION);
 
@@ -13,8 +16,6 @@ use Moo;
 use experimental 'smartmatch';
 with 'Org::To::Role';
 extends 'Org::To::Base';
-
-# VERSION
 
 require Exporter;
 our @ISA;

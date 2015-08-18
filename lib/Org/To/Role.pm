@@ -1,14 +1,15 @@
 package Org::To::Role;
 
+# DATE
+# VERSION
+
 use 5.010;
 use strict;
 use warnings;
-use Log::Any '$log';
+use Log::Any::IfLOG '$log';
 
 use Moo::Role;
 use String::Escape qw/elide printable/;
-
-# VERSION
 
 requires 'export_document';
 requires 'export_block';
