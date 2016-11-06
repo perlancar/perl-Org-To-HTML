@@ -1,5 +1,11 @@
 Revision history for Org-To-HTML
 
+0.17    2016-11-06 (PERLANCAR)
+
+	- Set Org document object's ignore_unknown_settings to 1; Replace
+	  File::Slurp::Tiny with File::Slurper.
+
+
 0.16    2015-09-03 (PERLANCAR)
 
 	- No functional changes.
