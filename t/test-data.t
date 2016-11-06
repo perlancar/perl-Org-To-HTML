@@ -7,7 +7,7 @@ use warnings;
 use FindBin '$Bin';
 use lib $Bin, "$Bin/t";
 
-use File::Slurp::Tiny qw(read_file);
+use File::Slurper qw(read_text);
 use Test::More 0.96;
 require "testlib.pl";
 
@@ -19,7 +19,7 @@ test_to_html(
         css_url => 'style.css',
     },
     status => 200,
-    result => scalar read_file("$Bin/data/example.org.html"),
+    result => scalar read_text("$Bin/data/example.org.html"),
 );
 
 test_to_html(
@@ -29,7 +29,7 @@ test_to_html(
         naked=>1,
     },
     status => 200,
-    result => scalar read_file("$Bin/data/naked.org.html"),
+    result => scalar read_text("$Bin/data/naked.org.html"),
 );
 
 done_testing();

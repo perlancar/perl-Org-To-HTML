@@ -8,7 +8,7 @@ use Log::Any::IfLOG '$log';
 
 use vars qw($VERSION);
 
-use File::Slurp::Tiny qw(read_file);
+use File::Slurper qw(read_text);
 use HTML::Entities qw/encode_entities/;
 use Org::Document;
 
@@ -93,6 +93,9 @@ _
             summary => 'Don\'t wrap exported HTML with HTML/HEAD/BODY elements',
             schema => ['bool' => {}],
         },
+        ignore_unknown_settings => {
+            schema => 'bool',
+        },
     },
 };
 sub org_to_html {
@@ -100,8 +103,10 @@ sub org_to_html {
 
     my $doc;
     if ($args{source_file}) {
-        $doc = Org::Document->new(from_string =>
-                                      scalar read_file($args{source_file}));
+        $doc = Org::Document->new(
+            from_string => scalar read_text($args{source_file}),
+            ignore_unknown_settings => $args{ignore_unknown_settings},
+        );
     } elsif (defined($args{source_str})) {
         $doc = Org::Document->new(from_string => $args{source_str});
     } else {
