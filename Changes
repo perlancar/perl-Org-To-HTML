@@ -1,5 +1,12 @@
 Revision history for Org-To-HTML
 
+0.19    2016-11-14 (PERLANCAR)
+
+	- No functional changes.
+
+	- [doc] Add a note about using org-mode for 'serious' exporting.
+
+
 0.18    2016-11-14 (PERLANCAR)
 
 	- Allow org_to_html() to be used by subclass (add internal argument
