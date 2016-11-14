@@ -1,5 +1,11 @@
 Revision history for Org-To-HTML
 
+0.18    2016-11-14 (PERLANCAR)
+
+	- Allow org_to_html() to be used by subclass (add internal argument
+	  _class).
+
+
 0.17    2016-11-06 (PERLANCAR)
 
 	- Set Org document object's ignore_unknown_settings to 1; Replace
