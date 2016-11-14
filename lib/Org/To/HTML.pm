@@ -113,7 +113,7 @@ sub org_to_html {
         return [400, "Please specify source_file/source_str"];
     }
 
-    my $obj = __PACKAGE__->new(
+    my $obj = ($args{_class} // __PACKAGE__)->new(
         include_tags => $args{include_tags},
         exclude_tags => $args{exclude_tags},
         css_url      => $args{css_url},
