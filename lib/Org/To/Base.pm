@@ -72,8 +72,14 @@ sub export_elements {
     my $res = [];
   ELEM:
     for my $elem (@elems) {
-        require String::Escape;
+        if ($self->can("before_export_element")) {
+            $self->before_export_element(
+                hook => 'before_export_element',
+                elem => $elem,
+            );
+        }
         if ($log->is_trace) {
+            require String::Escape;
             $log->tracef("exporting element %s (%s) ...", ref($elem),
                          String::Escape::elide(
                              String::Escape::printable($elem->as_string), 30));
@@ -124,6 +130,13 @@ sub export_elements {
             $log->warn("Don't know how to export $elc element, skipped");
             push @$res, $self->export_elements(@{$elem->children})
                 if $elem->children;
+        }
+
+        if ($self->can("after_export_element")) {
+            $self->after_export_element(
+                hook => 'after_export_element',
+                elem => $elem,
+            );
         }
     }
 
@@ -178,5 +191,23 @@ Export Org.
 =head2 $exp->export_elements(@elems) => STR
 
 Export Org element objects and with the children, recursively. Will call various
-export_*() methods according to element class. Should return a string which is
-the exported document.
+C<export_*()> methods according to element class. Should return a string which
+is the exported document.
+
+Several hooks are recognized and will be invoked if defined:
+
+=over
+
+=item * before_export_element
+
+Will be called before calling each C<export_*()>. Will be passed hash argument
+C<%hash> containing these keys: C<hook> (hook name, in this case
+C<before_export_element>), C<elem> (the element object).
+
+=item * after_export_element
+
+Will be called after calling each C<export_*()>. Will be passed hash argument
+C<%hash> containing these keys: C<hook> (hook name, in this case
+C<after_export_element>), C<elem> (the element object).
+
+=back
