@@ -134,6 +134,8 @@ sub org_to_html {
 sub export_document {
     my ($self, $doc) = @_;
 
+    $self->{_prev_elem_is_inline} = 0;
+
     my $html = [];
     unless ($self->naked) {
         push @$html, "<HTML>\n";
@@ -162,6 +164,14 @@ sub export_document {
     }
 
     join "", @$html;
+}
+
+sub before_export_element {
+    my $self = shift;
+    my %args = @_;
+
+    $self->{_prev_elem_is_inline} =
+        $args{elem}->can("is_inline") && $args{elem}->is_inline ? 1:0;
 }
 
 sub export_block {
@@ -338,7 +348,10 @@ sub export_text {
 
     push @$html, "<$tag>" if $tag;
     my $text = encode_entities($elem->text);
-    $text =~ s/\R\R/\n\n<p>/g;
+    $text =~ s/\R\R+/\n\n<p>/g;
+    if ($self->{_prev_elem_is_inline}) {
+        $text =~ s/\A\R/ /;
+    }
     $text =~ s/(?<=.)\R/ /g;
     push @$html, $text;
     push @$html, $self->export_elements(@{$elem->children}) if $elem->children;
@@ -385,7 +398,7 @@ sub export_link {
 1;
 # ABSTRACT:
 
-=for Pod::Coverage ^(export_.+)$
+=for Pod::Coverage ^(export_.+|before_.+|after_.+)$
 
 =head1 SYNOPSIS
 
