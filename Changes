@@ -1,5 +1,3 @@
-Revision history for Org-To-HTML
-
 0.21    2016-12-24 (PERLANCAR)
 
 	- [Bugfix] Avoid linebreak \n when an inline element e.g. link is
