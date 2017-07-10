@@ -6,7 +6,7 @@ package Org::To::Role;
 use 5.010;
 use strict;
 use warnings;
-use Log::Any::IfLOG '$log';
+use Log::ger;
 
 use Moo::Role;
 use String::Escape qw/elide printable/;

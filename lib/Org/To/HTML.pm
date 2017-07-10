@@ -4,7 +4,7 @@ package Org::To::HTML;
 # VERSION
 
 use 5.010;
-use Log::Any::IfLOG '$log';
+use Log::ger;
 
 use vars qw($VERSION);
 

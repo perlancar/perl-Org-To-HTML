@@ -4,7 +4,7 @@ package Org::To::Base;
 # VERSION
 
 use 5.010001;
-use Log::Any::IfLOG '$log';
+use Log::ger;
 
 use List::Util qw(first);
 use Moo;
@@ -78,9 +78,9 @@ sub export_elements {
                 elem => $elem,
             );
         }
-        if ($log->is_trace) {
+        if (log_is_trace) {
             require String::Escape;
-            $log->tracef("exporting element %s (%s) ...", ref($elem),
+            log_trace("exporting element %s (%s) ...", ref($elem),
                          String::Escape::elide(
                              String::Escape::printable($elem->as_string), 30));
         }
@@ -127,7 +127,7 @@ sub export_elements {
         } elsif ($elc eq 'Org::Document') {
             push @$res, $self->export_document($elem);
         } else {
-            $log->warn("Don't know how to export $elc element, skipped");
+            log_warn("Don't know how to export $elc element, skipped");
             push @$res, $self->export_elements(@{$elem->children})
                 if $elem->children;
         }
