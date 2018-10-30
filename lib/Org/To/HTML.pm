@@ -10,7 +10,7 @@ use Log::ger;
 
 use vars qw($VERSION);
 
-use File::Slurper qw(read_text);
+use File::Slurper qw(read_text write_text);
 use HTML::Entities qw/encode_entities/;
 use Org::Document;
 
@@ -126,7 +126,7 @@ sub org_to_html {
     my $html = $obj->export($doc);
     #$log->tracef("html = %s", $html);
     if ($args{target_file}) {
-        write_file($args{target_file}, $html);
+        write_text($args{target_file}, $html);
         return [200, "OK"];
     } else {
         return [200, "OK", $html];
