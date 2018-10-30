@@ -427,7 +427,8 @@ sub export_link {
 
 Export Org format to HTML. To customize, you can subclass this module.
 
-A command-line utility is included: L<org-to-html>.
+A command-line utility L<org-to-html> is available in the distribution
+L<App::OrgUtils>.
 
 Note that this module is just a simple exporter, for "serious" works you'll
 probably want to use the exporting features or L<org-mode|http://orgmode.org>.
