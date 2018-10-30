@@ -365,13 +365,13 @@ sub export_text {
 sub export_time_range {
     my ($self, $elem) = @_;
 
-    $elem->as_string;
+    encode_entities($elem->as_string);
 }
 
 sub export_timestamp {
     my ($self, $elem) = @_;
 
-    $elem->as_string;
+    encode_entities($elem->as_string);
 }
 
 sub export_link {
