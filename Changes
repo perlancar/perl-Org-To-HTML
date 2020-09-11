@@ -1,3 +1,8 @@
+0.232   2020-09-11  Released-By: PERLANCAR; Urgency: medium
+
+	- Add option: inline_images (image link becomes <img> and not <a>).
+
+
 0.231   2018-10-30  Released-By: PERLANCAR
 
         - [bugfix] Forgot to HTML-escape timestamp which might contain "<" and
