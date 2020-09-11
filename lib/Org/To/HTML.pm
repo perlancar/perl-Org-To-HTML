@@ -1,6 +1,8 @@
 package Org::To::HTML;
 
+# AUTHORITY
 # DATE
+# DIST
 # VERSION
 
 use 5.010001;
@@ -383,6 +385,7 @@ sub export_timestamp {
 
 sub export_link {
     require Filename::Image;
+    require URI;
 
     my ($self, $elem) = @_;
 
@@ -390,21 +393,35 @@ sub export_link {
     my $link = $elem->link;
     my $looks_like_image = Filename::Image::check_image_filename(filename => $link);
     my $inline_images = $self->inline_images;
+
     if ($inline_images && $looks_like_image) {
         # TODO: extract to method e.g. settings
-        my $settings;
+        my $elem_settings;
         my $s = $elem;
         while (1) {
             $s = $s->prev_sibling;
             last unless $s && $s->isa("Org::Element::Setting");
-            $settings->{ $s->name } = $s->raw_arg;
+            $elem_settings->{ $s->name } = $s->raw_arg;
         }
         #use DD; dd $settings;
-        my $caption = $settings->{CAPTION};
+        my $caption = $elem_settings->{CAPTION};
+
+        # TODO: extract to method e.g. settings of Org::Document
+        my $doc_settings;
+        $s = $elem->document->children->[0];
+        while (1) {
+            $s = $s->next_sibling;
+            last unless $s && $s->isa("Org::Element::Setting");
+            $doc_settings->{ $s->name } = $s->raw_arg;
+        }
+        #use DD; dd $settings;
+        my $img_base = $doc_settings->{IMAGE_BASE};
+
+        my $url = defined($img_base) ? URI->new($link)->abs(URI->new($img_base)) : $link;
 
         push @$html, "<figure>" if defined $caption;
         push @$html, "<img src=\"";
-        push @$html, $link;
+        push @$html, "$url";
         push @$html, "\" />";
         push @$html, "<figcaption>", encode_entities($caption), "</figcaption>";
         push @$html, "</figure>" if defined $caption;
