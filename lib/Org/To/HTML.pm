@@ -27,6 +27,7 @@ our @EXPORT_OK = qw(org_to_html);
 has naked => (is => 'rw');
 has html_title => (is => 'rw');
 has css_url => (is => 'rw');
+has inline_images => (is =>  'rw');
 
 our %SPEC;
 $SPEC{org_to_html} = {
@@ -98,6 +99,11 @@ _
         ignore_unknown_settings => {
             schema => 'bool',
         },
+        inline_images => {
+            summary => 'If set to true, will make link to an image filename into an <img> element instead of <a>',
+            schema => 'bool',
+            default => 1,
+        },
     },
 };
 sub org_to_html {
@@ -116,11 +122,12 @@ sub org_to_html {
     }
 
     my $obj = ($args{_class} // __PACKAGE__)->new(
-        include_tags => $args{include_tags},
-        exclude_tags => $args{exclude_tags},
-        css_url      => $args{css_url},
-        naked        => $args{naked},
-        html_title   => $args{html_title} // $args{source_file},
+        include_tags  => $args{include_tags},
+        exclude_tags  => $args{exclude_tags},
+        css_url       => $args{css_url},
+        naked         => $args{naked},
+        html_title    => $args{html_title} // $args{source_file},
+        inline_images => $args{inline_images} // 1,
     );
 
     my $html = $obj->export($doc);
@@ -375,24 +382,43 @@ sub export_timestamp {
 }
 
 sub export_link {
+    require Filename::Image;
+
     my ($self, $elem) = @_;
 
     my $html = [];
-    push @$html, "<a href=\"";
-    if ($elem->link =~ m!^\w+:!) {
-        # looks like a url
-        push @$html, $elem->link;
+    my $link = $elem->link;
+    my $looks_like_image = Filename::Image::check_image_filename(filename => $link);
+    my $inline_images = $self->inline_images;
+    if ($inline_images && $looks_like_image) {
+        # TODO: extract to method e.g. settings
+        my $settings;
+        my $s = $elem;
+        while (1) {
+            $s = $s->prev_sibling;
+            last unless $s && $s->isa("Org::Element::Setting");
+            $settings->{ $s->name } = $s->raw_arg;
+        }
+        #use DD; dd $settings;
+        my $caption = $settings->{CAPTION};
+
+        push @$html, "<figure>" if defined $caption;
+        push @$html, "<img src=\"";
+        push @$html, $link;
+        push @$html, "\" />";
+        push @$html, "<figcaption>", encode_entities($caption), "</figcaption>";
+        push @$html, "</figure>" if defined $caption;
     } else {
-        # assume it's an anchor
-        push @$html, "#", __escape_target($elem->link);
+        push @$html, "<a href=\"";
+        push @$html, $link;
+        push @$html, "\">";
+        if ($elem->description) {
+            push @$html, $self->export_elements($elem->description);
+        } else {
+            push @$html, $link;
+        }
+        push @$html, "</a>";
     }
-    push @$html, "\">";
-    if ($elem->description) {
-        push @$html, $self->export_elements($elem->description);
-    } else {
-        push @$html, $elem->link;
-    }
-    push @$html, "</a>";
 
     join "", @$html;
 }
