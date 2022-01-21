@@ -1,14 +1,16 @@
 package Org::To::Base;
 
-# DATE
-# VERSION
-
 use 5.010001;
 use Log::ger;
 
 use List::Util qw(first);
 use Moo;
 use experimental 'smartmatch';
+
+# AUTHORITY
+# DATE
+# DIST
+# VERSION
 
 has include_tags => (is => 'rw');
 has exclude_tags => (is => 'rw');

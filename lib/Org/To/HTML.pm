@@ -1,17 +1,12 @@
 package Org::To::HTML;
 
-# AUTHORITY
-# DATE
-# DIST
-# VERSION
-
 use 5.010001;
 use strict;
+use vars qw($VERSION);
 use warnings;
 use Log::ger;
 
-use vars qw($VERSION);
-
+use Exporter 'import';
 use File::Slurper qw(read_text write_text);
 use HTML::Entities qw/encode_entities/;
 use Org::Document;
@@ -21,9 +16,11 @@ use experimental 'smartmatch';
 with 'Org::To::Role';
 extends 'Org::To::Base';
 
-require Exporter;
-our @ISA;
-push @ISA,       qw(Exporter);
+# AUTHORITY
+# DATE
+# DIST
+# VERSION
+
 our @EXPORT_OK = qw(org_to_html);
 
 has naked => (is => 'rw');
@@ -118,7 +115,10 @@ sub org_to_html {
             ignore_unknown_settings => $args{ignore_unknown_settings},
         );
     } elsif (defined($args{source_str})) {
-        $doc = Org::Document->new(from_string => $args{source_str});
+        $doc = Org::Document->new(
+            from_string => $args{source_str},
+            ignore_unknown_settings => $args{ignore_unknown_settings},
+        );
     } else {
         return [400, "Please specify source_file/source_str"];
     }
