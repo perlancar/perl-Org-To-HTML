@@ -503,6 +503,16 @@ If set, export_document() will output a LINK element pointing to this CSS.
 Export document to HTML.
 
 
+=head1 FAQ
+
+=head2 Why would one want to use this instead of org-mode's built-in exporting features?
+
+This module might come in handy if you want to customize the Org-to-HTML
+translation with Perl, for example when you want to customize the default HTML
+title when there's no C<#+TITLE> setting, change translation of table element to
+an ASCII table, etc.
+
+
 =head1 SEE ALSO
 
 For more information about Org document format, visit http://orgmode.org/
