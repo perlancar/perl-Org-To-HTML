@@ -1,8 +1,6 @@
 package Org::To::Base;
 
-# DATE
-# VERSION
-
+use strict;
 use 5.010001;
 use Log::ger;
 
@@ -10,8 +8,14 @@ use List::Util qw(first);
 use Moo;
 use experimental 'smartmatch';
 
+has source_file => (is => 'rw'); # for informational purposes
 has include_tags => (is => 'rw');
 has exclude_tags => (is => 'rw');
+
+# AUTHORITY
+# DATE
+# DIST
+# VERSION
 
 sub _included_children {
     my ($self, $elem) = @_;
