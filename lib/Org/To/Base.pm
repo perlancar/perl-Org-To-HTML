@@ -1,5 +1,6 @@
 package Org::To::Base;
 
+use strict;
 use 5.010001;
 use Log::ger;
 
@@ -12,6 +13,7 @@ use experimental 'smartmatch';
 # DIST
 # VERSION
 
+has source_file => (is => 'rw'); # for informational purposes
 has include_tags => (is => 'rw');
 has exclude_tags => (is => 'rw');
 
@@ -166,22 +168,27 @@ and so on).
 
 =head1 ATTRIBUTES
 
-=head2 include_tags => ARRAYREF
+=head2 include_tags
 
-Works like Org's 'org-export-select-tags' variable. If the whole document
-doesn't have any of these tags, then the whole document will be exported.
-Otherwise, trees that do not carry one of these tags will be excluded. If a
-selected tree is a subtree, the heading hierarchy above it will also be selected
-for export, but not the text below those headings.
+Arrayref. Works like Org's 'org-export-select-tags' variable. If the whole
+document doesn't have any of these tags, then the whole document will be
+exported. Otherwise, trees that do not carry one of these tags will be excluded.
+If a selected tree is a subtree, the heading hierarchy above it will also be
+selected for export, but not the text below those headings.
 
-=head2 exclude_tags => ARRAYREF
+=head2 exclude_tags
 
-If the whole document doesn't have any of these tags, then the whole document
-will be exported. Otherwise, trees that do not carry one of these tags will be
-excluded. If a selected tree is a subtree, the heading hierarchy above it will
-also be selected for export, but not the text below those headings.
+Arrayref. If the whole document doesn't have any of these tags, then the whole
+document will be exported. Otherwise, trees that do not carry one of these tags
+will be excluded. If a selected tree is a subtree, the heading hierarchy above
+it will also be selected for export, but not the text below those headings.
 
-exclude_tags is evaluated after include_tags.
+C<exclude_tags> is evaluated after L</include_tags>.
+
+=head2 source_file
+
+String. Optional. Can be set for informational purposes, e.g. will be used as
+default title when document does not set C>#+TITLE>.
 
 
 =head1 METHODS
