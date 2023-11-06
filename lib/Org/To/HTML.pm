@@ -503,14 +503,18 @@ to the name of the source file, or C<(source string)>.
 
 If set, export_document() will output a LINK element pointing to this CSS.
 
+=head2 inline_images => BOOL
+
 
 =head1 METHODS
 
-=head1 new(%args)
+=head2 new(%args)
 
 =head2 $exp->export_document($doc) => HTML
 
 Export document to HTML.
+
+=head2 org_to_html
 
 
 =head1 FAQ
