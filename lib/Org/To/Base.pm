@@ -6,7 +6,6 @@ use Log::ger;
 
 use List::Util qw(first);
 use Moo;
-use experimental 'smartmatch';
 
 # AUTHORITY
 # DATE
@@ -23,7 +22,7 @@ sub _included_children {
     my @htags = $elem->get_tags;
     my @children = @{$elem->children // []};
     if ($self->include_tags) {
-        if (!defined(first {$_ ~~ @htags} @{$self->include_tags})) {
+        if (!defined(first {my $tag=$_; grep {$_ eq $tag} @htags} @{$self->include_tags})) {
             # headline doesn't contain include_tags, select only
             # suheadlines that contain them
             @children = ();
@@ -35,7 +34,7 @@ sub _included_children {
                         return unless
                             $elem->isa('Org::Element::Headline');
                         my @t = $elem->get_tags;
-                        return defined(first {$_ ~~ @t}
+                        return defined(first {my $tag=$_; grep {$_ eq $tag} @t}
                                            @{$self->include_tags});
                     });
                 next unless @hl_included;
@@ -45,7 +44,7 @@ sub _included_children {
         }
     }
     if ($self->exclude_tags) {
-        return () if defined(first {$_ ~~ @htags}
+        return () if defined(first {my $tag=$_; grep {$_ eq $tag} @htags}
                                  @{$self->exclude_tags});
     }
     @children;
@@ -59,7 +58,7 @@ sub export {
         my $doc_has_include_tags;
         for my $h ($doc->find('Org::Element::Headline')) {
             my @htags = $h->get_tags;
-            if (defined(first {$_ ~~ @htags} @$inct)) {
+            if (defined(first {my $tag=$_; grep {$_ eq $tag} @htags} @$inct)) {
                 $doc_has_include_tags++;
                 last;
             }
