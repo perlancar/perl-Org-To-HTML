@@ -31,12 +31,12 @@ our %SPEC;
 $SPEC{org_to_html} = {
     v => 1.1,
     summary => 'Export Org document to HTML',
-    description => <<'_',
+    description => <<'MARKDOWN',
 
 This is the non-OO interface. For more customization, consider subclassing
 Org::To::HTML.
 
-_
+MARKDOWN
     args => {
         source_file => {
             summary => 'Source Org file to export',
@@ -49,16 +49,16 @@ _
         target_file => {
             summary => 'HTML file to write to',
             schema => ['str' => {}],
-            description => <<'_',
+            description => <<'MARKDOWN',
 
 If not specified, HTML string will be returned.
 
-_
+MARKDOWN
         },
         include_tags => {
             summary => 'Include trees that carry one of these tags',
             schema => ['array' => {of => 'str*'}],
-            description => <<'_',
+            description => <<'MARKDOWN',
 
 Works like Org's 'org-export-select-tags' variable. If the whole document
 doesn't have any of these tags, then the whole document will be exported.
@@ -66,12 +66,12 @@ Otherwise, trees that do not carry one of these tags will be excluded. If a
 selected tree is a subtree, the heading hierarchy above it will also be selected
 for export, but not the text below those headings.
 
-_
+MARKDOWN
         },
         exclude_tags => {
             summary => 'Exclude trees that carry one of these tags',
             schema => ['array' => {of => 'str*'}],
-            description => <<'_',
+            description => <<'MARKDOWN',
 
 If the whole document doesn't have any of these tags, then the whole document
 will be exported. Otherwise, trees that do not carry one of these tags will be
@@ -80,7 +80,7 @@ also be selected for export, but not the text below those headings.
 
 exclude_tags is evaluated after include_tags.
 
-_
+MARKDOWN
         },
         html_title => {
             summary => 'HTML document title, defaults to source_file',
@@ -393,14 +393,14 @@ sub export_timestamp {
 }
 
 sub export_link {
-    require Filename::Image;
+    require Filename::Type::Image;
     require URI;
 
     my ($self, $elem) = @_;
 
     my $html = [];
     my $link = $elem->link;
-    my $looks_like_image = Filename::Image::check_image_filename(filename => $link);
+    my $looks_like_image = Filename::Type::Image::check_image_filename(filename => $link);
     my $inline_images = $self->inline_images;
 
     if ($inline_images && $looks_like_image) {
